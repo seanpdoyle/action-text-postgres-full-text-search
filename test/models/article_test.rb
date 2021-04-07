@@ -24,4 +24,14 @@ class ArticleTest < ActiveSupport::TestCase
 
     assert_includes search_results.pluck(:title), includes_query.title
   end
+
+  test "queries can omit stop words" do
+    includes_query = Article.create! title: "Includes the query", content: <<~HTML
+      <div>The text of this article matches has the <strong>needle</strong> in the haystack</div>
+    HTML
+
+    search_results = Article.with_content_containing "needle haystack"
+
+    assert_includes search_results.pluck(:title), includes_query.title
+  end
 end
